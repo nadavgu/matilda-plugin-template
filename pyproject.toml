@@ -1,0 +1,16 @@
+[build-system]
+requires = ["setuptools"]
+
+[project]
+name = 'matilda-template-plugin'
+version = '0.2.0'
+authors = [{name = 'Nadav Gur', email = 'nadavgu@gmail.com'}]
+dependencies = [
+    'matilda'
+]
+
+[project.entry-points.'matilda.plugins']
+template = 'template.template_plugin'
+
+[tool.setuptools.package-data]
+'template.resources' = ["plugin.jar"]
