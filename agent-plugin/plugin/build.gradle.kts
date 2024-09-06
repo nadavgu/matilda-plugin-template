@@ -15,8 +15,8 @@ repositories {
 dependencies {
     testImplementation(platform("org.junit:junit-bom:5.9.1"))
     testImplementation("org.junit.jupiter:junit-jupiter")
-    implementation("org.matilda:commands-generator-api:0.1.0")
-    annotationProcessor("org.matilda:commands-generator:0.1.0")
+    implementation("org.matilda:commands-generator-api:0.3.0")
+    annotationProcessor("org.matilda:commands-generator:0.3.0")
     annotationProcessor("com.google.dagger:dagger-compiler:2.47")
 }
 

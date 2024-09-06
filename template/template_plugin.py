@@ -1,4 +1,4 @@
-from maddie.dependency import Dependency, T
+from maddie.dependency import Dependency
 from maddie.dependency_container import DependencyContainer
 from template.generated.commands.math_service import MathService
 
