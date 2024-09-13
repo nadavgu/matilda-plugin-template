@@ -1,75 +1,78 @@
-package org.matilda.template;
+package org.matilda.template
 
-import org.matilda.commands.MatildaCommand;
-import org.matilda.commands.MatildaService;
-import org.matilda.template.protobuf.Exercise;
-
-import java.util.ArrayList;
-import java.util.List;
-import java.util.stream.Collectors;
+import org.matilda.commands.MatildaCommand
+import org.matilda.commands.MatildaService
+import org.matilda.template.protobuf.Exercise
+import org.matilda.template.protobuf.Operation
+import java.util.stream.Collectors
 
 @MatildaService
-public class MathService {
+class MathService {
     @MatildaCommand
-    public int square(int number) {
-        return number * number;
+    fun square(number: Int): Int {
+        return number * number
     }
 
     @MatildaCommand
-    public int sum(int first, int second) {
-        return first + second;
+    fun sum(first: Int, second: Int): Int {
+        return first + second
     }
 
     @MatildaCommand
-    public int div(int first, int second) {
-        return first / second;
+    fun div(first: Int, second: Int): Int {
+        return first / second
     }
 
     @MatildaCommand
-    public int multiSum(List<Integer> values) {
-        return values.stream().reduce(0, this::sum);
+    fun multiSum(values: List<Int>): Int {
+        return values.stream().reduce(0) { first: Int, second: Int -> this.sum(first, second) }
     }
 
     @MatildaCommand
-    public List<Integer> factorize(int value) {
-        List<Integer> values = new ArrayList<>();
-        int maxFactor = (int) Math.sqrt(value);
-        int remainingValue = value;
-        for (int i = 2; i <= maxFactor && i < remainingValue; i++) {
+    fun factorize(value: Int): List<Int> {
+        val values: MutableList<Int> = ArrayList()
+        val maxFactor = Math.sqrt(value.toDouble()).toInt()
+        var remainingValue = value
+        var i = 2
+        while (i <= maxFactor && i < remainingValue) {
             while (remainingValue % i == 0) {
-                values.add(i);
-                remainingValue /= i;
+                values.add(i)
+                remainingValue /= i
             }
+            i++
         }
         if (remainingValue > 1) {
-            values.add(remainingValue);
+            values.add(remainingValue)
         }
-        return values;
+        return values
     }
 
     @MatildaCommand
-    public List<Integer> map(FunctionService function, List<Integer> values) {
-        return values.stream().map(function::apply).collect(Collectors.toList());
+    fun map(function: FunctionService, values: List<Int?>): List<Int> {
+        return values.stream().map { value: Int? ->
+            function.apply(
+                value!!
+            )
+        }.collect(Collectors.toList())
     }
 
     @MatildaCommand
-    public FunctionService createAdder(int amount) {
-        return (value) -> value + amount;
+    fun createAdder(amount: Int): FunctionService {
+        return object : FunctionService {
+            override fun apply(value: Int): Int {
+                return value + amount
+            }
+        }
     }
 
     @MatildaCommand
-    public double solveExercise(Exercise exercise) {
-        switch (exercise.getOperation()) {
-            case ADD:
-                return exercise.getFirstOperand() + exercise.getSecondOperand();
-            case SUBTRACT:
-                return exercise.getFirstOperand() - exercise.getSecondOperand();
-            case MULTIPLY:
-                return exercise.getFirstOperand() * exercise.getSecondOperand();
-            case DIVIDE:
-                return exercise.getFirstOperand() / exercise.getSecondOperand();
-            default:
-                throw new IllegalArgumentException("Unsupported operation: " + exercise.getOperation());
+    fun solveExercise(exercise: Exercise): Double {
+        return when (exercise.operation) {
+            Operation.ADD -> exercise.firstOperand + exercise.secondOperand
+            Operation.SUBTRACT -> exercise.firstOperand - exercise.secondOperand
+            Operation.MULTIPLY -> exercise.firstOperand * exercise.secondOperand
+            Operation.DIVIDE -> exercise.firstOperand / exercise.secondOperand
+            else -> throw IllegalArgumentException("Unsupported operation: " + exercise.operation)
         }
     }
 }

@@ -1,10 +1,10 @@
-package org.matilda.template;
+package org.matilda.template
 
-import org.matilda.commands.MatildaCommand;
-import org.matilda.commands.MatildaDynamicService;
+import org.matilda.commands.MatildaCommand
+import org.matilda.commands.MatildaDynamicService
 
 @MatildaDynamicService
-public interface FunctionService {
+interface FunctionService {
     @MatildaCommand
-    int apply(int value);
+    fun apply(value: Int): Int
 }
