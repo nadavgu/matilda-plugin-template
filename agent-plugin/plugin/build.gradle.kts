@@ -1,7 +1,11 @@
+import org.jetbrains.kotlin.gradle.dsl.JvmTarget
+
 plugins {
     java
     application
     id("com.google.protobuf") version "0.9.4"
+    kotlin("jvm")
+    kotlin("kapt")
 }
 
 group = "org.matilda"
@@ -25,17 +29,22 @@ dependencies {
     testImplementation("org.junit.jupiter:junit-jupiter")
     implementation("org.matilda:commands-generator-api:$matildaVersion")
     compileOnly("org.matilda:commands-generator-protos:$matildaVersion")
-    annotationProcessor("org.matilda:commands-generator:$matildaVersion")
-    annotationProcessor("com.google.dagger:dagger-compiler:$daggerVersion")
+    kapt("org.matilda:commands-generator:$matildaVersion")
+    kapt("com.google.dagger:dagger-compiler:$daggerVersion")
     implementation("com.google.dagger:dagger:$daggerVersion")
+    implementation(kotlin("stdlib-jdk8"))
 }
 
-tasks.compileJava {
-    options.compilerArgs.add("-ApythonRootDir=${pythonRootDir.asFile.absolutePath}")
-    options.compilerArgs.add("-ApythonGeneratedPackage=$pythonGeneratedPackage")
-    options.compilerArgs.add("-AprotobufDirs=${File(layout.buildDirectory.asFile.get(), "extracted-include-protos/main/").absolutePath}" +
-            ":${File(projectDir, "src/main/proto/").absolutePath}")
-    options.compilerArgs.add("-AjavaMainPackage=org.matilda.template")
+kapt {
+    arguments {
+        arg("pythonRootDir", pythonRootDir.asFile.absolutePath)
+        arg("pythonGeneratedPackage", pythonGeneratedPackage)
+        arg("protobufDirs",
+            File(layout.buildDirectory.asFile.get(), "extracted-include-protos/main/").absolutePath + ":"
+                    + File(projectDir, "src/main/proto/").absolutePath
+        )
+        arg("javaMainPackage", "org.matilda.template")
+    }
 }
 
 tasks.test {
@@ -60,6 +69,19 @@ tasks.jar {
 java {
     sourceCompatibility = JavaVersion.VERSION_1_8
     targetCompatibility = JavaVersion.VERSION_1_8
+}
+
+kotlin {
+    compilerOptions {
+        jvmTarget.set(JvmTarget.JVM_1_8)
+    }
+}
+
+sourceSets {
+    main {
+        java.srcDir("build/generated/source/proto/kapt/main")
+        kotlin.srcDir("build/generated/source/proto/kapt/main")
+    }
 }
 
 application {
