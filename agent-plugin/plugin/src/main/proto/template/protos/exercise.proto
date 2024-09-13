@@ -1,0 +1,19 @@
+syntax = "proto3";
+
+option java_package = "org.matilda.template.protobuf";
+option java_outer_classname = "ExerciseProto";
+option java_multiple_files = true;
+
+
+enum Operation {
+  ADD = 0;
+  SUBTRACT = 1;
+  MULTIPLY = 2;
+  DIVIDE = 3;
+}
+
+message Exercise {
+  Operation operation = 1;
+  double first_operand = 2;
+  double second_operand = 3;
+}
