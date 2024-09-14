@@ -45,6 +45,11 @@ tasks.test {
 }
 
 tasks.jar {
+    from({
+        configurations.runtimeClasspath.get().filter { it.name.endsWith("jar") }.map { zipTree(it) }
+    })
+    duplicatesStrategy = DuplicatesStrategy.INCLUDE
+
     doLast {
         outputs.files.forEach { outputFile ->
             copy {
