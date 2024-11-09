@@ -5,7 +5,7 @@ plugins {
     application
     id("com.google.protobuf") version "0.9.4"
     kotlin("jvm")
-    kotlin("kapt")
+    id("com.google.devtools.ksp")
 }
 
 group = "org.matilda"
@@ -29,22 +29,20 @@ dependencies {
     testImplementation("org.junit.jupiter:junit-jupiter")
     implementation("org.matilda:commands-generator-api:$matildaVersion")
     compileOnly("org.matilda:commands-generator-protos:$matildaVersion")
-    kapt("org.matilda:commands-generator:$matildaVersion")
-    kapt("com.google.dagger:dagger-compiler:$daggerVersion")
+    ksp("org.matilda:commands-generator:$matildaVersion")
+    ksp("com.google.dagger:dagger-compiler:$daggerVersion")
     implementation("com.google.dagger:dagger:$daggerVersion")
     implementation(kotlin("stdlib-jdk8"))
 }
 
-kapt {
-    arguments {
-        arg("pythonRootDir", pythonRootDir.asFile.absolutePath)
-        arg("pythonGeneratedPackage", pythonGeneratedPackage)
-        arg("protobufDirs",
-            File(layout.buildDirectory.asFile.get(), "extracted-include-protos/main/").absolutePath + ":"
-                    + File(projectDir, "src/main/proto/").absolutePath
-        )
-        arg("javaMainPackage", "org.matilda.template")
-    }
+ksp {
+    arg("pythonRootDir", pythonRootDir.asFile.absolutePath)
+    arg("pythonGeneratedPackage", pythonGeneratedPackage)
+    arg("protobufDirs",
+        File(layout.buildDirectory.asFile.get(), "extracted-include-protos/main/").absolutePath + ":"
+                + File(projectDir, "src/main/proto/").absolutePath
+    )
+    arg("javaMainPackage", "org.matilda.template")
 }
 
 tasks.test {
