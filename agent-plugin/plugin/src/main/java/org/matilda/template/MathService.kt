@@ -48,11 +48,9 @@ class MathService {
     }
 
     @MatildaCommand
-    fun map(function: FunctionService, values: List<Int?>): List<Int> {
-        return values.stream().map { value: Int? ->
-            function.apply(
-                value!!
-            )
+    fun map(function: FunctionService, values: List<Int>): List<Int> {
+        return values.stream().map { value: Int ->
+            function.apply(value)
         }.collect(Collectors.toList())
     }
 
