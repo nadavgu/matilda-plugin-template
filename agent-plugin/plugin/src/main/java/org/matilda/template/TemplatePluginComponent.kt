@@ -1,13 +1,13 @@
 package org.matilda.template
 
-import dagger.Component
+import me.tatarka.inject.annotations.Component
 import org.matilda.commands.CommandRegistry
-import org.matilda.commands.PluginDependenciesModule
+import org.matilda.commands.MatildaScope
+import org.matilda.commands.PluginDependenciesComponent
 import org.matilda.template.generated.commands.CommandRegistryModule
-import javax.inject.Singleton
 
-@Component(modules = [CommandRegistryModule::class, PluginDependenciesModule::class])
-@Singleton
-interface TemplatePluginComponent {
-    fun commandRegistry(): CommandRegistry
+@Component
+@MatildaScope
+abstract class TemplatePluginComponent(@Component val pluginDependencies: PluginDependenciesComponent) : CommandRegistryModule {
+    abstract fun commandRegistry(): CommandRegistry
 }

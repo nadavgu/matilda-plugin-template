@@ -16,7 +16,7 @@ val pythonResourcesDir = pythonRootDir.dir(providers.gradleProperty("RESOURCES_S
 val pythonGeneratedPackage = providers.gradleProperty("PYTHON_GENERATED_PACKAGE").get()
 val protobufVersion: String by project
 val matildaVersion: String by project
-val daggerVersion: String by project
+val kotlinInjectVersion: String by project
 
 repositories {
     mavenCentral()
@@ -30,8 +30,8 @@ dependencies {
     implementation("org.matilda:commands-generator-api:$matildaVersion")
     compileOnly("org.matilda:commands-generator-protos:$matildaVersion")
     ksp("org.matilda:commands-generator:$matildaVersion")
-    ksp("com.google.dagger:dagger-compiler:$daggerVersion")
-    implementation("com.google.dagger:dagger:$daggerVersion")
+    ksp("me.tatarka.inject:kotlin-inject-compiler-ksp:$kotlinInjectVersion")
+    implementation("me.tatarka.inject:kotlin-inject-runtime:$kotlinInjectVersion")
     implementation(kotlin("stdlib-jdk8"))
 }
 
@@ -43,6 +43,8 @@ ksp {
                 + File(projectDir, "src/main/proto/").absolutePath
     )
     arg("javaMainPackage", "org.matilda.template")
+    arg("generateKotlin", "true")
+    arg("diFramework", "kotlinInject")
 }
 
 tasks.test {
