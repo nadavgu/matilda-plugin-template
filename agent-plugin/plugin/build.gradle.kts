@@ -20,10 +20,10 @@ repositories {
 dependencies {
     testImplementation(platform("org.junit:junit-bom:5.9.1"))
     testImplementation("org.junit.jupiter:junit-jupiter")
-    implementation("org.matilda:commands-generator-api:0.5.0")
-    ksp("org.matilda:commands-generator:0.5.0")
-    ksp("com.google.dagger:dagger-compiler:2.52")
-    implementation("com.google.dagger:dagger:2.52")
+    implementation("org.matilda:commands-generator-api:0.6.0")
+    ksp("org.matilda:commands-generator:0.6.0")
+    ksp("me.tatarka.inject:kotlin-inject-compiler-ksp:0.7.2")
+    implementation("me.tatarka.inject:kotlin-inject-runtime:0.7.2")
     implementation(kotlin("stdlib-jdk8"))
 }
 
@@ -38,6 +38,8 @@ ksp {
                 + File(projectDir, "src/main/proto/").absolutePath
     )
     arg("javaMainPackage", "org.matilda.template")
+    arg("generateKotlin", "true")
+    arg("diFramework", "kotlinInject")
 }
 
 tasks.test {
