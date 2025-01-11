@@ -8,7 +8,7 @@ import org.matilda.template.TemplatePlugin
 import kotlin.experimental.ExperimentalNativeApi
 
 @CName(externName = "createCommandRegistry")
-fun createCommandRegistry(pluginDependencies: CPointer<PluginDependenciesStruct>): CPointer<CommandRegistryStruct> {
-    val commandRegistry = TemplatePlugin.createCommandRegistry(pluginDependencies.pointed.toPluginDependencies())
-    return commandRegistry.toCommandRegistryStruct().ptr
+fun createCommandRegistry(pluginDependencies: COpaquePointer): COpaquePointer {
+    val commandRegistry = TemplatePlugin.createCommandRegistry(pluginDependencies.toPluginDependencies())
+    return commandRegistry.toCommandRegistryStructPtr()
 }
