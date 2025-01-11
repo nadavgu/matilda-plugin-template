@@ -15,6 +15,7 @@ val pythonRootDir = rootProject.layout.projectDirectory.dir(providers.gradleProp
 val pythonResourcesDir = pythonRootDir.dir(providers.gradleProperty("RESOURCES_SUBDIR"))
 val pythonGeneratedPackage = providers.gradleProperty("PYTHON_GENERATED_PACKAGE").get()
 val protobufVersion: String by project
+val pbandkVersion: String by project
 val matildaVersion: String by project
 val kotlinInjectVersion: String by project
 
@@ -33,6 +34,7 @@ dependencies {
     ksp("me.tatarka.inject:kotlin-inject-compiler-ksp:$kotlinInjectVersion")
     implementation("me.tatarka.inject:kotlin-inject-runtime:$kotlinInjectVersion")
     implementation(kotlin("stdlib-jdk8"))
+    implementation("pro.streem.pbandk:pbandk-runtime:$pbandkVersion")
 }
 
 ksp {
@@ -94,6 +96,12 @@ protobuf {
         artifact = "com.google.protobuf:protoc:$protobufVersion"
     }
 
+    plugins {
+        create("pbandk") {
+            artifact = "pro.streem.pbandk:protoc-gen-pbandk-jvm:$pbandkVersion:jvm8@jar"
+        }
+    }
+
     generateProtoTasks {
         all().configureEach {
             builtins {
@@ -104,6 +112,13 @@ protobuf {
                             into(pythonRootDir)
                         }
                     }
+                }
+
+                remove(findByName("java"))
+            }
+
+            plugins {
+                create("pbandk") {
                 }
             }
         }
