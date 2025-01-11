@@ -5,11 +5,17 @@ plugins {
     application
     id("com.google.protobuf") version "0.9.4"
     kotlin("jvm")
-    id("com.google.devtools.ksp") version "2.0.21-1.0.25"
+    id("com.google.devtools.ksp")
 }
 
 group = "org.matilda"
 version = providers.gradleProperty("VERSION").get()
+
+val pythonRootDir = rootProject.layout.projectDirectory.dir(providers.gradleProperty("PYTHON_ROOT_DIR_PATH")).get()
+val pythonGeneratedPackage = providers.gradleProperty("PYTHON_GENERATED_PACKAGE").get()
+val protobufVersion: String by project
+val matildaVersion: String by project
+val kotlinInjectVersion: String by project
 
 repositories {
     mavenCentral()
@@ -20,15 +26,12 @@ repositories {
 dependencies {
     testImplementation(platform("org.junit:junit-bom:5.9.1"))
     testImplementation("org.junit.jupiter:junit-jupiter")
-    implementation("org.matilda:commands-generator-api:0.6.0")
-    ksp("org.matilda:commands-generator:0.6.0")
-    ksp("me.tatarka.inject:kotlin-inject-compiler-ksp:0.7.2")
-    implementation("me.tatarka.inject:kotlin-inject-runtime:0.7.2")
+    implementation("org.matilda:commands-generator-api:$matildaVersion")
+    ksp("org.matilda:commands-generator:$matildaVersion")
+    ksp("me.tatarka.inject:kotlin-inject-compiler-ksp:$kotlinInjectVersion")
+    implementation("me.tatarka.inject:kotlin-inject-runtime:$kotlinInjectVersion")
     implementation(kotlin("stdlib-jdk8"))
 }
-
-val pythonRootDir = rootProject.layout.projectDirectory.dir(providers.gradleProperty("PYTHON_ROOT_DIR_PATH")).get()
-val pythonGeneratedPackage = providers.gradleProperty("PYTHON_GENERATED_PACKAGE").get()
 
 ksp {
     arg("pythonRootDir", pythonRootDir.asFile.absolutePath)
@@ -88,7 +91,7 @@ application {
 protobuf {
     protoc {
         // The artifact spec for the Protobuf Compiler
-        artifact = "com.google.protobuf:protoc:3.23.0"
+        artifact = "com.google.protobuf:protoc:$protobufVersion"
     }
 
     generateProtoTasks {

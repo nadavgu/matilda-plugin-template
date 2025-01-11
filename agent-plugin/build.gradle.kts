@@ -1,9 +1,8 @@
 plugins {
-    kotlin("jvm") version "2.0.21"
+    // this is necessary to avoid the plugins to be loaded multiple times
+    // in each subproject's classloader
+    kotlin("jvm") apply false
 }
 repositories {
     mavenCentral()
-}
-dependencies {
-    implementation(kotlin("stdlib-jdk8"))
 }
