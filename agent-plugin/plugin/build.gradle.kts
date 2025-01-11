@@ -27,6 +27,7 @@ dependencies {
     testImplementation(platform("org.junit:junit-bom:5.9.1"))
     testImplementation("org.junit.jupiter:junit-jupiter")
     implementation("org.matilda:commands-generator-api:$matildaVersion")
+    compileOnly("org.matilda:commands-generator-protos:$matildaVersion")
     ksp("org.matilda:commands-generator:$matildaVersion")
     ksp("me.tatarka.inject:kotlin-inject-compiler-ksp:$kotlinInjectVersion")
     implementation("me.tatarka.inject:kotlin-inject-runtime:$kotlinInjectVersion")
