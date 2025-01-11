@@ -67,7 +67,15 @@ kotlin {
         }
     }
 
-    linuxX64()
+    linuxX64 {
+        binaries {
+            sharedLib(buildTypes = listOf(DEBUG)) {
+                outputDirectory =
+                    pythonRootDir.dir(providers.gradleProperty("RESOURCES_SUBDIR")).get().asFile
+                baseName = "plugin-linuxX64.so"
+            }
+        }
+    }
 
     sourceSets {
         commonMain {

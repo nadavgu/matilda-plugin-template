@@ -1,13 +1,17 @@
+@file:OptIn(ExperimentalNativeApi::class)
+
 package org.matilda.template
 
 import org.matilda.commands.CommandRegistry
 import org.matilda.commands.PluginDependencies
 import org.matilda.commands.PluginDependenciesComponent
 import org.matilda.commands.create
+import kotlin.experimental.ExperimentalNativeApi
 import kotlin.jvm.JvmStatic
 
 object TemplatePlugin {
     @JvmStatic
+    @CName(externName = "createCommandRegistry")
     fun createCommandRegistry(pluginDependencies: PluginDependencies): CommandRegistry {
         return TemplatePluginComponent::class.create(PluginDependenciesComponent::class.create(pluginDependencies))
             .commandRegistry()
