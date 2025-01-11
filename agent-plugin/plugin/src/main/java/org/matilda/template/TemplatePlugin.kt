@@ -4,6 +4,7 @@ import org.matilda.commands.CommandRegistry
 import org.matilda.commands.PluginDependencies
 import org.matilda.commands.PluginDependenciesComponent
 import org.matilda.commands.create
+import kotlin.jvm.JvmStatic
 
 object TemplatePlugin {
     @JvmStatic

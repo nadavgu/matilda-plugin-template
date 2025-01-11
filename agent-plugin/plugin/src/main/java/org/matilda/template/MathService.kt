@@ -4,7 +4,7 @@ import org.matilda.commands.MatildaCommand
 import org.matilda.commands.MatildaService
 import org.matilda.template.protobuf.Exercise
 import org.matilda.template.protobuf.Operation
-import java.util.stream.Collectors
+import kotlin.math.sqrt
 
 @MatildaService
 class MathService {
@@ -25,13 +25,13 @@ class MathService {
 
     @MatildaCommand
     fun multiSum(values: List<Int>): Int {
-        return values.stream().reduce(0) { first: Int, second: Int -> this.sum(first, second) }
+        return values.reduce { first: Int, second: Int -> this.sum(first, second) }
     }
 
     @MatildaCommand
     fun factorize(value: Int): List<Int> {
         val values: MutableList<Int> = ArrayList()
-        val maxFactor = Math.sqrt(value.toDouble()).toInt()
+        val maxFactor = sqrt(value.toDouble()).toInt()
         var remainingValue = value
         var i = 2
         while (i <= maxFactor && i < remainingValue) {
@@ -49,9 +49,9 @@ class MathService {
 
     @MatildaCommand
     fun map(function: FunctionService, values: List<Int>): List<Int> {
-        return values.stream().map { value: Int ->
+        return values.map { value: Int ->
             function.apply(value)
-        }.collect(Collectors.toList())
+        }.toList()
     }
 
     @MatildaCommand
