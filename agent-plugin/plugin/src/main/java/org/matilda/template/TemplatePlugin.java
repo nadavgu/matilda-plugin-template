@@ -1,12 +1,13 @@
 package org.matilda.template;
 
 import org.matilda.commands.CommandRegistry;
+import org.matilda.commands.PluginDependencies;
 import org.matilda.commands.PluginDependenciesModule;
 
 public class TemplatePlugin {
-    public static CommandRegistry createCommandRegistry(PluginDependenciesModule pluginDependenciesModule) {
+    public static CommandRegistry createCommandRegistry(PluginDependencies pluginDependencies) {
         return DaggerTemplatePluginComponent.builder()
-                .pluginDependenciesModule(pluginDependenciesModule)
+                .pluginDependenciesModule(new PluginDependenciesModule(pluginDependencies))
                 .build()
                 .commandRegistry();
     }
