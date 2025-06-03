@@ -7,6 +7,11 @@ plugins {
 group = "org.matilda"
 version = providers.gradleProperty("VERSION").get()
 
+val pythonRootDir = rootProject.layout.projectDirectory.dir(providers.gradleProperty("PYTHON_ROOT_DIR_PATH")).get()
+val pythonGeneratedPackage = providers.gradleProperty("PYTHON_GENERATED_PACKAGE").get()
+val protobufVersion: String by project
+val matildaVersion: String by project
+
 repositories {
     mavenCentral()
     mavenLocal()
@@ -15,13 +20,10 @@ repositories {
 dependencies {
     testImplementation(platform("org.junit:junit-bom:5.9.1"))
     testImplementation("org.junit.jupiter:junit-jupiter")
-    implementation("org.matilda:commands-generator-api:0.3.0")
-    annotationProcessor("org.matilda:commands-generator:0.3.0")
+    implementation("org.matilda:commands-generator-api:$matildaVersion")
+    annotationProcessor("org.matilda:commands-generator:$matildaVersion")
     annotationProcessor("com.google.dagger:dagger-compiler:2.47")
 }
-
-val pythonRootDir = rootProject.layout.projectDirectory.dir(providers.gradleProperty("PYTHON_ROOT_DIR_PATH")).get()
-val pythonGeneratedPackage = providers.gradleProperty("PYTHON_GENERATED_PACKAGE").get()
 
 tasks.compileJava {
     options.compilerArgs.add("-ApythonRootDir=${pythonRootDir.asFile.absolutePath}")
@@ -59,7 +61,7 @@ application {
 protobuf {
     protoc {
         // The artifact spec for the Protobuf Compiler
-        artifact = "com.google.protobuf:protoc:3.23.0"
+        artifact = "com.google.protobuf:protoc:$protobufVersion"
     }
 
     generateProtoTasks {
