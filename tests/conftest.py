@@ -32,8 +32,6 @@ def matilda() -> Matilda:
 ], scope='session')
 def matilda_platform(request: SubRequest, run_on_connected_android_device: bool) -> MatildaPlatform:
     platform: MatildaPlatform = request.param
-    if platform == LINUX_X64:
-        pytest.skip(f"platform {platform} not supported by plugin")
     if platform.is_android() and not run_on_connected_android_device:
         pytest.skip("Not running tests on android in this run - to run pass the option --test-on-connected-android-device")
     return platform
