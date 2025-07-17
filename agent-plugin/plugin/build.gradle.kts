@@ -80,7 +80,6 @@ kotlin {
 
     sourceSets {
         commonMain {
-            kotlin.srcDir("src/main/java")
             dependencies {
                 implementation("org.matilda:commands-generator-api:$matildaVersion")
                 implementation("me.tatarka.inject:kotlin-inject-runtime:$kotlinInjectVersion")
