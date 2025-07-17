@@ -13,4 +13,4 @@ dependencies = [
 template = 'template.template_plugin'
 
 [tool.setuptools.package-data]
-'template.resources' = ["plugin.jar"]
+'template.resources' = ["plugin.jar", "android-plugin.apk"]

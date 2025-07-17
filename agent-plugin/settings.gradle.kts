@@ -1,4 +1,9 @@
 pluginManagement {
+    plugins {
+        val androidPluginVersion: String by settings
+        id("com.android.application") version androidPluginVersion
+        id("com.android.library") version androidPluginVersion
+    }
     repositories {
         gradlePluginPortal()
         google()
@@ -6,3 +11,4 @@ pluginManagement {
 }
 
 include("plugin")
+include("plugin-android")

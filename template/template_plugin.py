@@ -6,6 +6,7 @@ from matilda.plugins.plugin_entry_point import PluginEntryPoint
 
 PLUGIN_ENTRY_POINTS = {
     MatildaPlatform.JVM: PluginEntryPoint("org.matilda.template.TemplatePlugin"),
+    MatildaPlatform.ANDROID: PluginEntryPoint("org.matilda.template.TemplatePlugin"),
 }
 
 

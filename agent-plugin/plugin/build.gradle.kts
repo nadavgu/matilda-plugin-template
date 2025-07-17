@@ -8,6 +8,7 @@ group = "org.matilda"
 version = providers.gradleProperty("VERSION").get()
 
 val pythonRootDir = rootProject.layout.projectDirectory.dir(providers.gradleProperty("PYTHON_ROOT_DIR_PATH")).get()
+val pythonResourcesDir = pythonRootDir.dir(providers.gradleProperty("RESOURCES_SUBDIR"))
 val pythonGeneratedPackage = providers.gradleProperty("PYTHON_GENERATED_PACKAGE").get()
 val protobufVersion: String by project
 val matildaVersion: String by project
@@ -40,21 +41,19 @@ tasks.test {
     useJUnitPlatform()
 }
 
-tasks.jar {
+val packMergedJar = tasks.register<Jar>("packMergedJar") {
+    from(tasks.jar.get().outputs.files.map { zipTree(it) })
     from({
         configurations.runtimeClasspath.get().filter { it.name.endsWith("jar") }.map { zipTree(it) }
     })
     duplicatesStrategy = DuplicatesStrategy.INCLUDE
 
-    doLast {
-        outputs.files.forEach { outputFile ->
-            copy {
-                from(outputFile)
-                into(pythonRootDir.dir(providers.gradleProperty("RESOURCES_SUBDIR")))
-                rename {"plugin.jar"}
-            }
-        }
-    }
+    destinationDirectory.set(pythonResourcesDir)
+    archiveFileName.set("plugin.jar")
+}
+
+tasks.jar {
+    finalizedBy(packMergedJar)
 }
 
 java {
