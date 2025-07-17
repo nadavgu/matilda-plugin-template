@@ -16,4 +16,3 @@ pluginManagement {
 }
 
 include("plugin")
-include("plugin-android")

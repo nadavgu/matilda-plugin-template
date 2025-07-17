@@ -37,8 +37,7 @@ fun KotlinMultiplatformExtension.commonMainKspDependencies(
 }
 
 plugins {
-    java
-    application
+    id("com.android.application")
     id("com.google.protobuf") version "0.9.4"
     kotlin("multiplatform")
     id("com.google.devtools.ksp")
@@ -61,12 +60,36 @@ repositories {
     google()
 }
 
+android {
+    namespace = "org.matilda"
+    compileSdk = 36
+
+    defaultConfig {
+        minSdk = 21
+    }
+
+    packaging {
+        resources {
+            // no resources (such as .proto files) are needed
+            excludes += "**"
+        }
+    }
+}
+
+androidComponents {
+    beforeVariants(selector().withBuildType("release")) { variantBuilder ->
+        variantBuilder.enable = false
+    }
+}
+
 kotlin {
     jvm {
         mainRun {
             mainClass.set("org.matilda.template.TemplatePlugin")
         }
     }
+
+    androidTarget()
 
     linuxX64 {
         binaries {
@@ -109,7 +132,7 @@ ksp {
     arg("pythonRootDir", pythonRootDir.asFile.absolutePath)
     arg("pythonGeneratedPackage", pythonGeneratedPackage)
     arg("protobufDirs",
-        File(layout.buildDirectory.asFile.get(), "extracted-include-protos/main/").absolutePath + ":"
+        File(layout.buildDirectory.asFile.get(), "extracted-include-protos/debug/").absolutePath + ":"
                 + File(projectDir, "src/main/proto/").absolutePath
     )
     arg("javaMainPackage", "org.matilda.template")
@@ -120,7 +143,7 @@ ksp {
 val packMergedJar = tasks.register<Jar>("packMergedJar") {
     from(tasks.named<Jar>("jvmJar").get().outputs.files.map { zipTree(it) })
     from({
-        configurations.runtimeClasspath.get().filter { it.name.endsWith("jar") }.map { zipTree(it) }
+        configurations.getByName("jvmRuntimeClasspath").filter { it.name.endsWith("jar") }.map { zipTree(it) }
     })
     duplicatesStrategy = DuplicatesStrategy.INCLUDE
 
@@ -132,6 +155,20 @@ tasks.named<Jar>("jvmJar") {
     finalizedBy(packMergedJar)
 }
 
+afterEvaluate {
+    android.applicationVariants.forEach { variant ->
+        variant.packageApplicationProvider.get().doLast {
+            variant.outputs.forEach { output ->
+                copy {
+                    from(output.outputFile)
+                    into(pythonResourcesDir)
+                    rename { "android-plugin.apk" }
+                }
+            }
+        }
+    }
+}
+
 java {
     sourceCompatibility = JavaVersion.VERSION_1_8
     targetCompatibility = JavaVersion.VERSION_1_8
@@ -139,10 +176,6 @@ java {
 
 tasks.withType<KotlinCompile>().configureEach {
     compilerOptions.jvmTarget.set(JvmTarget.JVM_1_8)
-}
-
-application {
-    mainClass.set("org.matilda.template.TemplatePlugin")
 }
 
 protobuf {
@@ -158,7 +191,8 @@ protobuf {
     }
 
     generateProtoTasks {
-        ofSourceSet("main").forEach { task ->
+        // Only generate sources for debug, to prevent non-flavored from having duplicated sources
+        ofBuildType("debug").matching { !it.isTestVariant }.forEach { task ->
             task.builtins {
                 create("python") {
                     task.doLast {
@@ -169,7 +203,9 @@ protobuf {
                     }
                 }
 
-                remove(findByName("java"))
+                findByName("java")?.also {
+                    remove(it)
+                }
             }
             task.plugins {
                 create("pbandk") {
