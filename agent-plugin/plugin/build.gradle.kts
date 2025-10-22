@@ -12,6 +12,7 @@ val pythonResourcesDir = pythonRootDir.dir(providers.gradleProperty("RESOURCES_S
 val pythonGeneratedPackage = providers.gradleProperty("PYTHON_GENERATED_PACKAGE").get()
 val protobufVersion: String by project
 val matildaVersion: String by project
+val daggerVersion: String by project
 
 repositories {
     mavenCentral()
@@ -25,8 +26,8 @@ dependencies {
     implementation("org.matilda:commands-generator-api:$matildaVersion")
     compileOnly("org.matilda:commands-generator-protos:$matildaVersion")
     annotationProcessor("org.matilda:commands-generator:$matildaVersion")
-    annotationProcessor("com.google.dagger:dagger-compiler:2.47")
-    implementation("com.google.dagger:dagger:2.47")
+    annotationProcessor("com.google.dagger:dagger-compiler:$daggerVersion")
+    implementation("com.google.dagger:dagger:$daggerVersion")
 }
 
 tasks.compileJava {
