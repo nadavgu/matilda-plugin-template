@@ -1,12 +1,13 @@
 from maddie.dependency import Dependency
 from maddie.dependency_container import DependencyContainer
+from matilda.platform.supported_platforms import ANDROID, JVM
+
 from template.generated.commands.math_service import MathService
-from matilda.platform.matilda_platform import MatildaPlatform
 from matilda.plugins.plugin_entry_point import PluginEntryPoint
 
 PLUGIN_ENTRY_POINTS = {
-    MatildaPlatform.JVM: PluginEntryPoint("org.matilda.template.TemplatePlugin"),
-    MatildaPlatform.ANDROID: PluginEntryPoint("org.matilda.template.TemplatePlugin"),
+    JVM: PluginEntryPoint("org.matilda.template.TemplatePlugin"),
+    ANDROID: PluginEntryPoint("org.matilda.template.TemplatePlugin"),
 }
 
 
