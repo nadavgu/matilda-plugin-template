@@ -47,7 +47,7 @@ group = "org.matilda"
 version = providers.gradleProperty("VERSION").get()
 
 val pythonRootDir = rootProject.layout.projectDirectory.dir(providers.gradleProperty("PYTHON_ROOT_DIR_PATH")).get()
-val pythonResourcesDir = pythonRootDir.dir(providers.gradleProperty("RESOURCES_SUBDIR"))
+val pythonResourcesDir = pythonRootDir.dir(providers.gradleProperty("RESOURCES_SUBDIR")).get().asFile
 val pythonGeneratedPackage = providers.gradleProperty("PYTHON_GENERATED_PACKAGE").get()
 val protobufVersion: String by project
 val pbandkVersion: String by project
@@ -94,9 +94,26 @@ kotlin {
     linuxX64 {
         binaries {
             sharedLib(buildTypes = listOf(DEBUG)) {
-                outputDirectory =
-                    pythonRootDir.dir(providers.gradleProperty("RESOURCES_SUBDIR")).get().asFile
+                outputDirectory = pythonResourcesDir
                 baseName = "plugin-linuxX64.so"
+            }
+        }
+    }
+
+    androidNativeArm32 {
+        binaries {
+            sharedLib(buildTypes = listOf(DEBUG)) {
+                outputDirectory = pythonResourcesDir
+                baseName = "plugin-androidNativeArm32.so"
+            }
+        }
+    }
+
+    androidNativeArm64 {
+        binaries {
+            sharedLib(buildTypes = listOf(DEBUG)) {
+                outputDirectory = pythonResourcesDir
+                baseName = "plugin-androidNativeArm64.so"
             }
         }
     }

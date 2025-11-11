@@ -1,6 +1,6 @@
 from maddie.dependency import Dependency
 from maddie.dependency_container import DependencyContainer
-from matilda.platform.supported_platforms import ANDROID, JVM, LINUX_X64
+from matilda.platform.supported_platforms import ANDROID, JVM, LINUX_X64, ANDROID_NATIVE_ARM64, ANDROID_NATIVE_ARM32
 
 from template.generated.commands.math_service import MathService
 from matilda.plugins.plugin_entry_point import PluginEntryPoint
@@ -9,6 +9,8 @@ PLUGIN_ENTRY_POINTS = {
     JVM: PluginEntryPoint("org.matilda.template.TemplatePlugin"),
     ANDROID: PluginEntryPoint("org.matilda.template.TemplatePlugin"),
     LINUX_X64: PluginEntryPoint("createCommandRegistry"),
+    ANDROID_NATIVE_ARM64: PluginEntryPoint("createCommandRegistry"),
+    ANDROID_NATIVE_ARM32: PluginEntryPoint("createCommandRegistry"),
 }
 
 
